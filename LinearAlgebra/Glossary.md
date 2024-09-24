@@ -43,7 +43,7 @@ Expressed in python as __dot star__ :  V __.*__ W
 ## Outer Product
 The outer product of two vectors is a matrix.  It is the product of the first vector and the transpose of the second vector.
 
-![Outer Product](../images/OuterProduct.png "Outer Product")
+![Outer Product](../images/VectorOuterProduct.png "Outer Product")
 
 Calculated similarly to dot product except the second vector is transposed instead of the first.
 
