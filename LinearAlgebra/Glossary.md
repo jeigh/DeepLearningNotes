@@ -53,7 +53,7 @@ A vector that is perpendicular to the plane defined by the two vectors.
 * Defined only for 2 3D vectors.  
 * Result is another 3D vector.
 
-!(../images/CrossProduct.png "Cross Product")
+![Cross Product](../images/CrossProduct.png "Cross Product")
 
 
 ## Matrix 
