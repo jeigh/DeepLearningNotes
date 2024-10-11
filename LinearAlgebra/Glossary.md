@@ -265,6 +265,33 @@ eg...
 [ g, h, i ]    [ c, f, i ]      [a*g+b*h+c*i, d*g+e*h+f*i, g*g+h*h+i*i]
 ```
 
+## Matrix Algebra Shortcuts with square matrices
+* When A is a square matrix, A<sup>-1</sup> is the inverse of A.
+* When A is a square matrix, A<sup>-2</sup> is the inverse of AA.
+* When A is a square matrix, A<sup>-3</sup> is the inverse of AAA.
+* When A is a square matrix, A<sup>-n</sup> is the inverse of A<sup>n</sup>.
+* When A is a square matrix, A<sup>T</sup> is the transpose of A.
+* When A is a square matrix, A<sup>1/2</sup> is the square root of A.
+* When A is a square matrix, A<sup>1/3</sup> is the cube root of A.
+* When A is a square matrix, A<sup>1/n</sup> is the nth root of A.
+
+## Matrix algebra shortcuts with non-square matrices
+* When A is a full rank rectangular matrix, A<sup>T</sup>A is a square matrix.
+
+## Matrix algebra shortcuts with symmetric matrices
+* When A is a square symmetric matrix, A<sup>2</sup> is also a symmetric matrix.
+* When A is a symmetric matrix, A<sup>T</sup>A is A<sup>2</sup>.
+
+
+## Matrix algebra shortcuts with orthogonal matrices
+* When Q is a square orthogonal matrix, Q<sup>T</sup> is the same as Q<sup>-1</sup>.
+* When Q is a square orthogonal matrix, Q<sup>2</sup> is the identity matrix.
+* When Q is a square orthogonal matrix, Q<sup>3</sup> is the same as Q.
+* When Q is a square orthogonal matrix, Q<sup>-1</sup> is the same as Q<sup>T</sup>.
+
+
+
+
 ## Trace
 * The trace of a square matrix is the sum of the diagonal elements.  
 * It is used to calculate the determinant of a matrix.
@@ -404,6 +431,7 @@ the number of non-zero elements = 4
 
 ### Schatten P Norm
 The sum of the Pth power of the singular values of a matrix, then take the Pth root of the result.
+eg...
 
 ## Matrix Asymmetry Index
 a~i~ = norm(Ã) / norm(A)
@@ -411,22 +439,377 @@ a~i~ = norm(Ã) / norm(A)
 where Ã is the assymetry matrix (A - A^T^) / 2
 
 ## Matrix Inverse
-A matrix that when multiplied by another matrix, results in the identity matrix.
+* A matrix B that when multiplied by a given matrix A, results in the identity matrix.
+* Not all square matrices have an inverse.
+* Defined for Square, full rank matrices only.
+
+It's best to avoid inverses if possible due to rounding errors that result from floating-point arithmetic on computers.
+
+For orthogonal matrices, the inverse is the same as their transpose. (ie... A<sup>-1</sup> = A<sup>T</sup>, \
+and A<sup>-T</sup> = A)
 
 ### How to calculate the inverse of a matrix (MCA Algorithm)
+using this matrix as an example...
+```
+[ 1,  3,  0 ]
+[ 0, -2,  8 ]
+[ 7,  2, -6 ]
+```
 
+
+First, calculate the determinant of the matrix.  If the determinant is zero, the matrix does not have an inverse.
+```
+[ 1,  3,  0 ]
+[ 0, -2,  8 ]
+[ 7,  2, -6 ]
+```
+determinant = 164
+
+* M - Minors Matrix - The matrix of determinants of the submatrices of a matrix.
+```
+[  -4, -56,  14 ]
+[ -18,  -6, -19 ]
+[  24,   8,  -2 ]
+```
+
+ 
+* C - Cofactors Matrix - The minors matrix, with alternating signs.
+```
+[  -4, 56, 14 ]
+[  18, -6, 19 ]
+[  24, -8, -2 ]
+```
+
+* A - Adjugate Matrix - The transpose of the matrix of cofactors.
+```
+[  -4, 18, 24 ]
+[  56, -6, -8 ]
+[  14, 19, -2 ]
+```
+ 
+Divide the Adjuate matrix by the determinant of the original matrix to get the Inverse of the original matrix.
+```
+[  -4, 18, 24 ]
+[  56, -6, -8 ] * 1/164
+[  14, 19, -2 ]
+```
+
+## Singular Matrix
+A matrix that does not have an inverse. The determinant will be zero.
+
+## Full Column Rank
+A matrix that has only linearly independent columns.
 
 ## Left Inverse
-Given the original matrix A
-* (A^T^A)^-1^ * A^T^A = Identity matrix I
-* (A^T^A)^-1^ * A^T^ => Left Inverse of A
+Given the original full-column-rank matrix A 
+* (A<sup>T</sup>A)<sup>-1</sup> * A<sup>T</sup>A = Identity matrix I
+* (A<sup>T</sup>A)<sup>-1</sup> * A<sup>T</sup> => Left Inverse of A
+
+Only available when the Matrix A has full column rank.
+
+Can also be calculated as A = VΣ<sup>-1</sup>U<sup>T</sup> 
 
 ## Right Inverse
-Given the original matrix A
-* (A\*A^T^)(A\*A^T^)^-1^ = Identity matrix I
-* A^T^(A\*A^T^)^-1^ => Right Inverse of A
+Given the original full-row-rank matrix A
+* (A\*A<sup>T</sup>)(A\*A<sup>T</sup>)<sup>-1</sup> = Identity matrix I
+* A<sup>T</sup>(A\*A<sup>T</sup>)<sup>-1</sup> => Right Inverse of A
 
-## Pseudo Inverse
+## Pseudo Inverse (moore-penrose inverse)
+* The pseudo-inverse of a matrix is a generalization of the inverse of a matrix that works for non-square matrices.
+* The moore-penrose inverse is unique, but there are other kinds of pseudo-inverse algorithms that are not unique.
+
+## Projection in R<sup>2</sup> 
+* Mapping over magnitude
+Given
+* Vector A,   eg... [2, 3]
+* Point B, eg... [4, 5]
+* Scalar ß = ?  (meant to scale Alpha to be closest to point B)
+
+Come up with a scaled version of A that is closest to B.
+
+The line that is perpendicular to A is B - ßA.  This line is perpendicular to A, so the dot product of A and B - ßA is zero.
+
+A dot (B-Aß) = 0 \
+=> \
+A dot B - A dot Aß = 0 \
+=> \
+A dot Aß = A dot B  \
+=> \
+A dot Aß/(A dot A) = (A dot B) / (A dot A) 
+
+```
+ß = (A dot B) / (A dot A)
+```
+
+## Orthogonal Matrix
+A square matrix whose columns represent individual column vectors that are orthogonal to each other.  Each column should also be of unit length.
+
+## Gram-schmidt procedure
+* A method for finding an orthogonal basis for a subspace.
+* It's not reliable on large matricies due to rounding errors.  The concept is valid, but surds tend to make the result inaccurate.
+
+### Gram-Schmidt procedure walkthrough
+* Take the first column and orthogonalize it.  
+* Then take the second column and orthogonalize it with respect to the first column.  
+* Continue this process for all columns.
+* Once all this is done, scale each column to have a magnitude of 1. (ie.. make them each unit vectors)
+
+## Sherman-Morrison Formula
+An alternate formula that calculates the inverse of a matrix.
+Given
+* Matrix A
+* Identity matrix I
+* column vector a
+* column vector b 
+* a<sup>T</sup>b ≠ 1 \
+\
+A<sup>-1</sup> = I + ab<sup>T</sup> / (1 - a<sup>T</sup>b)
+
+
+## Five steps of model-fitting
+1. Define the equation(s) underlying the model
+2. Map the data into the model equations.
+3. Convert the equations into a metrix-vector equation.
+4. Compute the parameters.
+5. Statistical evaluation of the model
+
+## Statistics terminology for linear algebrists
+### GLM - General Linear Model
+y = Xβ + ε
+
+* Design Matrix X => Columns = independent variables, predictors, regressors etc...  Typically a tall matrix, so it only has 1 sided inverses.  Only works if it is full column rank.
+* Regression coefficients β => The coefficients that multiply the independent variables in the model.
+
+### Dependent variable y
+The variable that is being predicted.
+
+### Residuals vector ε
+The difference between the predicted values and the actual values.
+geometrically it's the line that is projected on to design matrix X.
+
+### y hat (ŷ)
+what the data would look like if the model captured all the relationships in the data.
+This is the case when ε is zeros -- there's no noise in the data.
+
+## Multicollinearity
+When two or more independent variables in a regression model are highly correlated =>  when the columns of the design matrix are linearly dependent =>  same column repeated twice.
+
+## Least Squares
+A method for finding the best-fitting line through a set of points.  It is used when the points do not lie on a straight line.
+Named because it minimizes the sum of the squares of the residuals.
+
+
+## Normal Equation
+X<sup>T</sup>Xβ = X<sup>T</sup>y
+
+## Least Squares via Row Reduction
+row reduction on X<sub>T</sub>Xy => Iβ
+
+## QR decomposition
+A matrix factorization technique that decomposes a matrix into an orthogonal matrix and an upper triangular matrix.
+
+## Eigen Decomposition
+A matrix factorization technique that decomposes a matrix into a matrix of eigenvectors and a diagonal matrix of eigenvalues.
+Symmetric matrices have orthogonal eigenvectors.
+
+
+## Characteristic Equation
+* The equation that is used to find the eigenvalues of a matrix.
+
+$$
+determinant(A - λI) = 0
+$$
+
+## Eigenlayers
+* The eigenvectors of a matrix that are associated with the same eigenvalue.
+
+
+## Generalized Eigendecomposition
+* A matrix factorization technique that decomposes a matrix into a matrix of generalized eigenvectors and a diagonal matrix of generalized eigenvalues.
+
+Given two matrices S and R, the generalized eigenvectors are the vectors v that satisfy the equation Sv = λRv.
+$$
+Sv = λRv =>  (S-λR)v = 0  
+$$
+
+
+## Difference between eigenvectors and generalized eigenvectors
+* Eigenvectors are the vectors that are not changed by a transformation.  Algebraically it is done using the identity matrix:
+$$
+Av = λIv
+$$
+* Generalized eigenvectors are the vectors that are scaled by a transformation.  Algebraically it is done using a different matrix (eg... R) than the identity matrix:
+$$
+Av = λRv
+$$
 
 
 
+## Singular value Decomposition (SVD)
+A matrix factorization technique that decomposes a matrix into three matrices.
+
+A = UΣV<sup>T</sup>
+
+Where
+* A is the original matrix (MxN)
+* U is a matrix of eigenvectors of A * A<sup>T</sup> (MxM)
+* Σ is a diagonal matrix of eigenvalues (MxN)
+* V is a matrix of eigenvectors of A<sup>T</sup> * A (NxN)
+
+On a symmetric matrix, U and V are the same.   Accounting for sign flips, U also will be the same (or very similar) to the eigenvectors of that matrix.
+
+with exception for the nullspace of the matrices, the V from SVD is the same matrix as the V from the eigenvalue decomposition of A<sup>T</sup>A.   This usually means the first M columns of V are the same, where M represents the rank of matrix A.
+
+The eigenvalues from Σ are the square roots of the eigenvalues from the eigenvalue decomposition of A<sup>T</sup>A.
+
+Σ is a diagonal matrix where the single values are listed across the diagonal.  The Diagonal values are non-negative and are sorted in descending order.  Any zero-valued single values correspond to the nullspace of the matrix.  THe rank of the matrix corresponds to the non-zero singular values.
+
+## Left inverse using the SVD
+A<sup>-1</sup> = VΣ<sup>-1</sup>U<sup>T</sup>
+
+
+
+
+## Four Subspaces
+* Column space - The space spanned by the columns of a matrix. - Aka the range of a matrix.
+* Null space - Aka the kernel of a matrix.  
+* Row space - The space spanned by the rows of a matrix. AKA the range of the transpose of a matrix.
+* Left null space - The null space of the transpose of a matrix. AKA the kernel of the transpose of a matrix.
+
+The SVD provides orthogonal for the four subspaces.
+
+## Spectral theory of matrices
+You can represent a matrix as the sum of many simpler matrices, each invdividual matrix being a rank of 1.
+
+## Condition Number
+A measure of how sensitive a matrix is to changes in its elements.  It is the ratio of the largest singular value (ie... form the diagonal values of matrix Σ) to the smallest singular value.
+
+Larger # => ill conditioned \
+Smaller # => well conditioned \
+
+Sometimes represented using the greek letter Kappa (κ)
+the ratio of the leftmost value to the rightmost value in a scree plot of the singular values.
+
+
+
+
+## Quadratic Form of a matrix
+A quadratic form is a function that takes a vector as input and returns a scalar.  It is defined as w<sup>T</sup>Sx, where w is a vector and S is a square matrix: \
+\
+$
+w^TSw
+$
+\
+\
+$ 
+S = \begin{pmatrix} a & b \\ c & d \end{pmatrix} , 
+w = \begin{pmatrix} x \\ y \end{pmatrix} 
+$
+\
+\
+therefore \
+\
+$
+w^TSw = ax^2+(b+c)xy + dy^2
+$
+
+If matrix S is symmetric, then the transpose of w<sup>T</sup>Sx is w<sup>T</sup>Sx.  
+
+Example: \
+$
+S = \begin{pmatrix} a & b \\ c & d \end{pmatrix} 
+$
+
+and therefore the quadratic expression simplifes to: \
+$
+w^TSw = ax^2+2bxy + dy^2
+$
+
+## Normalized Quadratic Form
+A quadratic form that is normalized to have a unit length.  It is defined as 
+
+$$
+\frac{w^TSw}{w^Tw} 
+$$
+In R<sup>2</sup> this simplifies to
+$$ 
+\frac{ax^2+(b+c)xy + dy^2}{x^2 + y^2} 
+$$
+
+## Principal Component Analysis (PCA)
+A technique that is used to reduce the dimensionality of a dataset by finding the directions of maximum variance in the data.
+
+$ W\Lambda = SW $
+    
+* W is the matrix of eigenvectors of the covariance matrix of the data.
+* Λ is the diagonal matrix of eigenvalues of the covariance matrix of the data.
+* S is the covariance matrix of the data.
+
+then ->
+$ y=A^Tw_j $
+
+* y is the component or score
+* A is the data matrix
+* $ w_j $ is the jth eigenvector of the covariance matrix of the data.  (aka factor, filter, or weight)
+
+## Quadratic form of generalized Eigendecomposition
+Given two matrices S and R, the generalized eigenvectors are the vectors v that satisfy the equation Sv = λRv.
+
+Given a matrix W of generalized eigenvectors, R is the mass matrix (or metric matrix) of the generalized eigenvalue equation
+* $ W^TW \neq I $
+* $ W^TAW $ will be a diagonal matrix
+* $ W^TRW $ will be the identity matrix
+
+
+## Definiteness of a square matrix
+The definiteness of a matrix is determined by the sign of the eigenvalues of the matrix. Ignore the zero point (origin).  
+
+
+Category|Geometry|Eigenvalues|Invertibility
+---|---|---|---
+Positive definite|Convex|All positive|Always invertible
+Positive semi-definite|Convex|All non-negative|No
+Indefinite|Saddle|Some positive, some negative|Possibly
+Negative semi-definite|Concave|All non-positive|No
+Negative definite|Concave|All negative|Always invertible
+
+## Properties of $ A^TA $
+* it is a Square matrix
+* It is a Symmetric matrix
+* It is invertable if A is full column or full row rank
+* It has orthogonal eigenvectors
+* it has real eigenvalues
+* If $ A^TA $ is full column rank, it is positive definite 
+* If $ A^TA $ is not full column rank, it is positive semi-definite
+
+## Properties of $ AA^T $
+* If $ AA^T $ is full column rank, it is positive definite 
+* If $ AA^T $ is not full column rank, it is positive semi-definite
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Linear descriminant analysis / Fisher's Linear Discriminant
+A technique that is used to find the linear combination of features that best separates two or more classes of data.
+
+
+## LU decomposition
+A matrix factorization technique that decomposes a matrix into a lower triangular matrix and an upper triangular matrix.
