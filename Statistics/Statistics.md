@@ -239,6 +239,7 @@ $$
 Kurtosis is a measure of the "tailedness" of the data.
 * **High Kurtosis** indicates a high peak and heavy tails.
 * **Low Kurtosis** indicates a flat peak and light tails.
+
 $$ 
 m_4 = \frac{1}{(n\sigma^4)} \sum_{i=1}^{n} ( x_i - \mu )^4
 $$
@@ -302,9 +303,96 @@ where:
 * $ \mu $ is the mean of the dataset,
 * $ \sigma $ is the standard deviation of the dataset.
 
+## min-max scaling
+Min-max scaling is a method of scaling data to a fixed range. It is used to standardize data and compare data points from different datasets.  The largest value in the dataset is scaled to 1, and the smallest value is scaled to 0.
 
+$$
+\tilde{x}_i = \frac{x_i - min(x)}{max(x) - min(x)}
+$$
 
+where:
+* $ \tilde{x}_i $ is the scaled data point,
+* $ x_i $ is the data point,
+* $ min(x) $ is the minimum value in the dataset,
+* $ max(x) $ is the maximum value in the dataset.
 
+Variation...   scale to something other than 0 and 1: 
+
+$$
+\tilde{x}_i = a+\frac{(x_i - min(x))(b-a)}{max(x) - min(x)}
+$$
+
+where:
+* $ \tilde{x}_i $ is the scaled data point,
+* $ x_i $ is the data point,
+* $ min(x) $ is the minimum value in the dataset,
+* $ max(x) $ is the maximum value in the dataset.
+* $ a $ is the lower bound of the scale
+* $ b $ is the upper bound of the scale
+
+## Outlier
+An outlier is a data point that is significantly different from the other data points in a dataset. 
+
+## Leverage
+Leverage is a measure of how much a data point influences the regression line. It is used to identify influential data points in a dataset.
+
+## Median Absolute Deviation
+The median absolute deviation is a measure of the spread of the data. It is the median of the absolute differences between each data point and the median of the dataset.
+
+$$
+MAD = median(|x_i - \tilde{x}|)
+$$
+
+## Modified Z-Score for outliers
+The modified Z-score is a measure of how many median absolute deviations a data point is from the median of the dataset. It is typically used on datasets with non-gaussian distributions.
+
+$$
+M_i = 0.6745 \times \frac{x_i - \tilde{x}}{MAD}
+$$
+
+Where
+* $ M_i $ is the modified Z-score,
+* $ x_i $ is the data point,
+* $ \tilde{x} $ is the median of the dataset,
+* $ MAD $ is the median absolute deviation of the dataset.
+
+## Multivariate Mean
+The multivariate mean is the average of a set of data points in a multidimensional space. It is used to describe the central tendency of a dataset.
+
+Can be expressed as the coordinates in $\mathbb{R}^2$ as $[ \bar{x}, \bar{y} ]$ or in $\mathbb{R}^3$ as $[ \bar{x}, \bar{y}, \bar{z} ]$ etc...
+
+## Multivariate Z-Score
+The multivariate Z-score is a measure of how many standard deviations a data point is from the mean of a multidimensional dataset. It is used to standardize data and compare data points from different datasets.
+
+can be expressed in $\mathbb{R}^2$ as $d_{a,b} = \sqrt{a_x-b_x^2 + (a_y-b_y)^2}$ \
+or in $\mathbb{R}^3$ as $d_{a,b} = \sqrt{(a_x-b_x)^2 + (a_y-b_y)^2 + (a_z-b_z)^2}$ 
+
+where 
+* $a$ is the data point
+* $b$ is the multivariate mean of the dataset
+
+## Tests
+* **Parametric Test** - makes assumptions about the distribution of the data. they are sensitive to outliers.
+* **Nonparametric Test** - does not make assumptions about the distribution of the data.  They robust to outliers. (Typically based on medians or ranks)
+
+| Parametric Test | NonParametric Tests |
+|-----------------|-----------------------|
+| 1-sample T-Test | Wilcoxon Signed-Rank Test |
+| 2-sample T-Test | Mann-Whitney U Test |
+| ANOVA | Kruskal-Wallis Test |
+| Pearson Correlation | Spearman Correlation |
+<!-- | Linear Regression | Chi-Square Test | -->
+
+## Nonlinear Data Transformations
+* Most statistical models are linear, so results may be interpreted in terms of the transformed data, not the original data.
+* They are not always approriate (eg... negative values in the dataset when dealing with logs)
+* They alter the spacing between data points.
+
+Examples
+* **Rank-transform** - replaces the data with their individual ranks (eg...  replace the data element with their sort-order.)
+* **Log-transform** - replaces the data with their logarithm 
+* **Square-root transform** - replaces the data with their square root
+* **Fisher-Z transform** - replaces the data with their Fisher transformation
 
 
 
